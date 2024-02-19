@@ -1,4 +1,4 @@
-# Randolio: Meth Van
+# Randolio: Meth Van [ESX fork by Smug GOD]
 
 A way to cook up meth in a Journey van (skill minigame based). Requires you to be in seat 1 (back left). Supports both ox lib radial and qb-radialmenu and uses a statebag for the particle fx.
 
