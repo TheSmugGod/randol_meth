@@ -11,3 +11,7 @@ A way to cook up meth in a Journey van (skill minigame based). Requires you to b
 
 ## Showcase
 * [Showcase](https://streamable.com/kz1bok)
+
+
+## Credit To [Randolio](https://github.com/Randolio/randol_meth/)
+He Created the script for QB, i just forked it to ESX
