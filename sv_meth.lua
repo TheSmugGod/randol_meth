@@ -21,19 +21,19 @@ RegisterNetEvent('randol_methvan:server:beginMaking', function(netId)
     local src = source
     local entity = NetworkGetEntityFromNetworkId(netId)
     local canContinue = false
-    local Player = QBCore.Functions.GetPlayer(src)
+    local Player = ESX.GetPlayerFromId(src)
 
     if methMakers[src] or not DoesEntityExist(entity) or GetEntityModel(entity) ~= `journey` then 
         return 
     end
 
-    local acetone = Player.Functions.GetItemByName('acetone') -- Player.Functions.GetItemByName cause easy support for both ox and qb.
-    local lithium = Player.Functions.GetItemByName('lithium')
-    local baggies = Player.Functions.GetItemByName('empty_weed_bag')
-
-    if acetone and acetone.amount > 0 and lithium and lithium.amount > 0 and baggies and baggies.amount >= bagAmounts.max then
-        Player.Functions.RemoveItem('acetone', 1)
-        Player.Functions.RemoveItem('lithium', 1)
+    local acetone = Player.hasItem('acetone')
+    local lithium = Player.hasItem('lithium')
+    local baggies = Player.hasItem('empty_baggie')
+    --print('acetone : ' .. table.concat(acetone) .. acetone.count .. ' lithium :' .. table.concat(lithium) .. lithium.count .. ' baggies :' .. table.concat(baggies) .. baggies.count)
+    if acetone.count > 0 and lithium.count > 0 and baggies.count > 0 then
+        Player.removeInventoryItem('acetone', 1)
+        Player.removeInventoryItem('lithium', 1)
         canContinue = true 
     end
 
@@ -42,7 +42,7 @@ RegisterNetEvent('randol_methvan:server:beginMaking', function(netId)
         Entity(entity).state:set('methSmoke', true, true)
         TriggerClientEvent('randol_methvan:client:startProd', src, methMakers[src])
     else
-        QBCore.Functions.Notify(src, "You are missing ingredients for this.", "error")
+        Player.showNotification("You are missing ingredients for this.")
     end
 end)
 
@@ -54,18 +54,18 @@ lib.callback.register('randol_methvan:server:updateProg', function(source, netId
 
     if entity ~= methMakers[src].vehicle then return false end
     
-    local Player = QBCore.Functions.GetPlayer(src)
+    local Player = ESX.GetPlayerFromId(src)
     local newProg = math.random(progressionGain.min, progressionGain.max)
     methMakers[src].progress += newProg
 
     if methMakers[src].progress >= 100 then
         methMakers[src] = nil
         local bags = math.random(bagAmounts.min, bagAmounts.max)
-        local baggies = Player.Functions.GetItemByName('empty_weed_bag')
-        if baggies and baggies.amount >= bags then
-            Player.Functions.RemoveItem('empty_weed_bag', bags)
-            Player.Functions.AddItem('meth', bags)
-            QBCore.Functions.Notify(src, ('You cooked up a batch of %s bags'):format(bags), 'success')
+        local baggies = Player.hasItem('empty_baggie')
+        if baggies then
+            Player.removeInventoryItem('empty_baggie', bags)
+            Player.addInventoryItem('meth', bags)
+            Player.showNotification(('You cooked up a batch of %s bags'):format(bags))
         end
         TriggerClientEvent('randol_methvan:client:finishProd', src)
         Entity(entity).state:set('methSmoke', nil, true)

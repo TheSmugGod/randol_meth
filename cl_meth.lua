@@ -121,7 +121,7 @@ local function clearRadialEvent()
     local success = lib.callback.await('randol_methvan:server:cancelProduction', false)
     if success then
         cancelProd()
-        QBCore.Functions.Notify("Production was stopped.", "error")
+        ESX.ShowNotification("Production was stopped.", "error")
     end
 end
 
@@ -140,24 +140,24 @@ RegisterNetEvent('randol_methvan:client:explodeFinish', function()
     if GetInvokingResource() then return end
     cancelProd()
     Wait(100)
-    QBCore.Functions.Notify("Production was stopped.", "error")
+    ESX.ShowNotification("Production was stopped.", "error")
     local vehicle = cache.vehicle
     SetEntityVelocity(vehicle, 0.0, 0.0, 5.0)
     NetworkExplodeVehicle(vehicle, true, false)
 end)
 
-RegisterNetEvent('QBCore:Player:SetPlayerData', function(val)
-    PlayerData = val
-end)
+--RegisterNetEvent('S', function(val)
+--    PlayerData = val
+--end)
 
 AddEventHandler('onResourceStart', function(resourceName)
     if GetCurrentResourceName() == resourceName then
-        PlayerData = QBCore.Functions.GetPlayerData()
+        PlayerData = ESX.GetPlayerData()
     end
 end)
 
 AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
-    PlayerData = QBCore.Functions.GetPlayerData()
+    PlayerData = ESX.GetPlayerData()
 end)
 
 AddEventHandler('randol_methvan:radial', function()
@@ -170,7 +170,7 @@ AddEventHandler('baseevents:onPlayerDied', function()
         local success = lib.callback.await('randol_methvan:server:cancelProduction', false)
         if success then
             cancelProd()
-            QBCore.Functions.Notify("Production was stopped.", "error")
+            ESX.ShowNotification("Production was stopped.", "error")
         end
     end
 end)
